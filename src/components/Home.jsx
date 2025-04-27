@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaCalculator, FaChartLine, FaGraduationCap, FaArrowRight } from 'react-icons/fa';
 import AnimatedPage from './AnimatedPage';
+import SemesterSelector from './SemesterSelector';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -127,12 +128,12 @@ const Home = () => {
             className="absolute top-0 left-0 w-full h-full"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.1 }}
-            transition={{ delay: 0.5, duration: 1 }}
+            transition={{ delay: 0.5, duration: 2 }}
           >
             {[...Array(10)].map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute rounded-full bg-white"
+                className="absolute rounded-full bg-red-900"
                 style={{
                   width: Math.random() * 50 + 10,
                   height: Math.random() * 50 + 10,
@@ -140,15 +141,15 @@ const Home = () => {
                   top: `${Math.random() * 100}%`,
                 }}
                 animate={{
-                  y: [0, Math.random() * -100 - 50],
+                  y: [0, Math.random() * -80 - 40],
                   opacity: [0.7, 0],
                 }}
                 transition={{
-                  duration: Math.random() * 5 + 5,
+                  duration: Math.random() * 10 + 15, // Much slower duration (15-25 seconds)
                   repeat: Infinity,
                   repeatType: "loop",
                   ease: "easeInOut",
-                  delay: Math.random() * 5,
+                  delay: Math.random() * 8,
                 }}
               />
             ))}
@@ -297,20 +298,18 @@ const Home = () => {
                 transition={{ delay: 0.3, duration: 0.5 }}
                 viewport={{ once: true }}
               >
-                <label htmlFor="semester" className="block text-sm font-medium text-gray-700">Select Your Semester:</label>
-                <select
+                <SemesterSelector
                   id="semester"
                   name="semester"
                   value={formData.semester}
                   onChange={handleChange}
                   required
-                  className="select-field"
-                >
-                  <option value="">-- Select Semester --</option>
-                  {semesters.map((semester, index) => (
-                    <option key={index} value={semester}>{semester}</option>
-                  ))}
-                </select>
+                  label="Select Your Semester"
+                  options={[
+                    { value: "", label: "-- Select Semester --" },
+                    ...semesters.map(semester => ({ value: semester, label: semester }))
+                  ]}
+                />
               </motion.div>
 
               <motion.button

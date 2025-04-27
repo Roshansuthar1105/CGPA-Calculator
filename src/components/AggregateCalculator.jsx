@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import AnimatedPage from './AnimatedPage';
+import ButtonSelector from './ButtonSelector';
+import NumberInput from './NumberInput';
 
 const AggregateCalculator = () => {
   const [semesters, setSemesters] = useState([
@@ -152,7 +154,7 @@ const AggregateCalculator = () => {
                   className="bg-gray-50 rounded-lg p-5 shadow-sm hover:shadow-md transition-all duration-300"
                   variants={itemVariants}
                   custom={index}
-                  whileHover={{ y: -5 }}
+                  whileHover={{ y: -5, transition: { duration: 0.5 } }}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold text-blue-600">Semester {semester.id}</h3>
@@ -170,39 +172,31 @@ const AggregateCalculator = () => {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label htmlFor={`sgpa-${semester.id}`} className="block text-sm font-medium text-gray-700">
-                        SGPA:
-                      </label>
-                      <input
-                        type="number"
-                        id={`sgpa-${semester.id}`}
-                        value={semester.sgpa}
-                        onChange={(e) => handleChange(semester.id, 'sgpa', e.target.value)}
-                        min="0"
-                        max="10"
-                        step="0.01"
-                        placeholder="Enter SGPA"
-                        required
-                        className="input-field"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label htmlFor={`credits-${semester.id}`} className="block text-sm font-medium text-gray-700">
-                        Credits:
-                      </label>
-                      <input
-                        type="number"
-                        id={`credits-${semester.id}`}
-                        value={semester.credits}
-                        onChange={(e) => handleChange(semester.id, 'credits', e.target.value)}
-                        min="1"
-                        step="0.5"
-                        placeholder="Enter Credits"
-                        required
-                        className="input-field"
-                      />
-                    </div>
+                    <NumberInput
+                      id={`sgpa-${semester.id}`}
+                      name={`sgpa-${semester.id}`}
+                      value={semester.sgpa}
+                      onChange={(e) => handleChange(semester.id, 'sgpa', e.target.value)}
+                      min="0"
+                      max="10"
+                      step="0.01"
+                      placeholder="Enter SGPA"
+                      required
+                      label="SGPA"
+                      theme="blue"
+                    />
+                    <NumberInput
+                      id={`credits-${semester.id}`}
+                      name={`credits-${semester.id}`}
+                      value={semester.credits}
+                      onChange={(e) => handleChange(semester.id, 'credits', e.target.value)}
+                      min="1"
+                      step="0.5"
+                      placeholder="Enter Credits"
+                      required
+                      label="Credits"
+                      theme="purple"
+                    />
                   </div>
                 </motion.div>
               ))}
@@ -218,8 +212,8 @@ const AggregateCalculator = () => {
                 type="button"
                 className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-md font-medium transition-colors duration-300 flex items-center justify-center"
                 onClick={handleAddSemester}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.05, transition: { duration: 0.4 } }}
+                whileTap={{ scale: 0.95, transition: { duration: 0.3 } }}
               >
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -229,8 +223,8 @@ const AggregateCalculator = () => {
               <motion.button
                 type="submit"
                 className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.05, transition: { duration: 0.4 } }}
+                whileTap={{ scale: 0.95, transition: { duration: 0.3 } }}
               >
                 Calculate CGPA
               </motion.button>
@@ -286,7 +280,7 @@ const AggregateCalculator = () => {
                         className="h-full rounded-full bg-red-500"
                         initial={{ width: 0 }}
                         animate={{ width: cgpa < 5 ? `${(cgpa/5)*100}%` : '0%' }}
-                        transition={{ delay: 0.7, duration: 1, ease: "easeOut" }}
+                        transition={{ delay: 0.7, duration: 2, ease: "easeOut" }}
                       ></motion.div>
                     </div>
                   </div>
@@ -300,7 +294,7 @@ const AggregateCalculator = () => {
                         className="h-full rounded-full bg-yellow-500"
                         initial={{ width: 0 }}
                         animate={{ width: cgpa >= 5 && cgpa < 7 ? `${((cgpa-5)/2)*100}%` : (cgpa >= 7 ? '100%' : '0%') }}
-                        transition={{ delay: 0.8, duration: 1, ease: "easeOut" }}
+                        transition={{ delay: 0.8, duration: 2, ease: "easeOut" }}
                       ></motion.div>
                     </div>
                   </div>
@@ -314,7 +308,7 @@ const AggregateCalculator = () => {
                         className="h-full rounded-full bg-green-500"
                         initial={{ width: 0 }}
                         animate={{ width: cgpa >= 7 && cgpa < 8.5 ? `${((cgpa-7)/1.5)*100}%` : (cgpa >= 8.5 ? '100%' : '0%') }}
-                        transition={{ delay: 0.9, duration: 1, ease: "easeOut" }}
+                        transition={{ delay: 0.9, duration: 2, ease: "easeOut" }}
                       ></motion.div>
                     </div>
                   </div>
@@ -328,7 +322,7 @@ const AggregateCalculator = () => {
                         className="h-full rounded-full bg-blue-500"
                         initial={{ width: 0 }}
                         animate={{ width: cgpa >= 8.5 ? `${((cgpa-8.5)/1.5)*100}%` : '0%' }}
-                        transition={{ delay: 1, duration: 1, ease: "easeOut" }}
+                        transition={{ delay: 1, duration: 2, ease: "easeOut" }}
                       ></motion.div>
                     </div>
                   </div>
@@ -346,7 +340,7 @@ const AggregateCalculator = () => {
                 </p>
                 <motion.div
                   className="mt-4"
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.05, transition: { duration: 0.4 } }}
                 >
                   <button
                     type="button"

@@ -2,22 +2,25 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import AnimatedPage from './AnimatedPage';
+import GradeSelector from './GradeSelector';
+import SemesterSelector from './SemesterSelector';
+import BranchSelector from './BranchSelector';
 
 // Subject data for different branches and semesters
 const subjectData = {
   'First Year (1st & 2nd Semester)': {
     subjects: {
-      'maths': 'Mathematics',
-      'phyche': 'Physics/Chemistry',
-      'cshv': 'Communication Skills/Human Values',
-      'ppsbme': 'Programming/Problem Solving/Basic Mechanical Engineering',
-      'beebce': 'Basic Electrical/Electronics/Civil Engineering',
-      'phychelab': 'Physics/Chemistry Lab',
-      'lhvlab': 'Language/Human Values Lab',
-      'cpmplab': 'Computer Programming/Manufacturing Practice Lab',
-      'beebcelab': 'Basic Electrical/Electronics/Civil Engineering Lab',
-      'caegcamdlab': 'Computer Aided Engineering Graphics/CAD Lab',
-      'deca': 'Design Engineering/Creative Arts'
+      'maths': 'Engineering Mathematics I / Engineering Mathematics II',
+      'phyche': 'Engineering Physics / Engineering Chemistry',
+      'cshv': 'Communication Skills / Human Values',
+      'ppsbme': 'Programming for Problem Solving / Basic Mechanical Engineering',
+      'beebce': 'Basic Electrical Engineering / Basic Civil Engineering',
+      'phychelab': 'Engineering Physics Lab / Engineering Chemistry Lab',
+      'lhvlab': 'Language Lab / Human Values Activities',
+      'cpmplab': 'Computer Programming Lab / Manufacturing Practices Workshop',
+      'beebcelab': 'Basic Electrical Engineering Lab / Basic Civil Engineering Lab',
+      'caegcamdlab': 'Computer Aided Engineering Graphics / Computer Aided Machine Drawing',
+      'sports': 'NCC/NSS/Sports'
     },
     credits: {
       'maths': 4.0,
@@ -30,56 +33,169 @@ const subjectData = {
       'cpmplab': 1.5,
       'beebcelab': 1.0,
       'caegcamdlab': 1.5,
-      'deca': 0.5
+      'sports': 0.5
     }
   },
-  // Add more semesters with their subjects and credits here
   '3rd Semester': {
     subjects: {
-      'subject1': 'Mathematics III',
-      'subject2': 'Data Structures',
-      'subject3': 'Digital Electronics',
-      'subject4': 'Object Oriented Programming',
-      'subject5': 'Computer Organization',
-      'subject6': 'Data Structures Lab',
-      'subject7': 'Digital Electronics Lab',
-      'subject8': 'OOP Lab'
+      'aem': 'Advanced Engineering Mathematics',
+      'tcmefa': 'Technical Communication / Managerial Economics and Financial Accounting',
+      'de': 'Digital Electronics',
+      'dsa': 'Data Structures and Algorithms',
+      'oop': 'Object Oriented Programming',
+      'se': 'Software Engineering',
+      'dsalab': 'Data Structures and Algorithms Lab',
+      'ooplab': 'Object Oriented Programming Lab',
+      'selab': 'Software Engineering Lab',
+      'delab': 'Digital Electronics Lab',
+      'industrialtraining': 'Industrial Training',
+      'foundationcourse': 'Foundation Course'
     },
     credits: {
-      'subject1': 4.0,
-      'subject2': 3.0,
-      'subject3': 3.0,
-      'subject4': 3.0,
-      'subject5': 3.0,
-      'subject6': 1.5,
-      'subject7': 1.5,
-      'subject8': 1.5
+      'aem': 3.0,
+      'tcmefa': 2.0,
+      'de': 3.0,
+      'dsa': 3.0,
+      'oop': 3.0,
+      'se': 3.0,
+      'dsalab': 1.5,
+      'ooplab': 1.5,
+      'selab': 1.5,
+      'delab': 1.5,
+      'industrialtraining': 1.0,
+      'foundationcourse': 0.5
     }
   },
   '4th Semester': {
     subjects: {
-      'subject1': 'Mathematics IV',
-      'subject2': 'Database Management Systems',
-      'subject3': 'Operating Systems',
-      'subject4': 'Computer Networks',
-      'subject5': 'Theory of Computation',
-      'subject6': 'DBMS Lab',
-      'subject7': 'OS Lab',
-      'subject8': 'Networks Lab'
+      'dms': 'Discrete Mathematics Structure',
+      'mefa': 'Managerial Economics and Financial Accounting / Technical Communication',
+      'mpi': 'Microprocessor & Interfaces',
+      'dbms': 'Database Management System',
+      'toc': 'Theory of Computation',
+      'dccn': 'Data Communication and Computer Networks',
+      'mpilab': 'Microprocessor & Interfaces Lab',
+      'dbmslab': 'Database Management System Lab',
+      'nplab': 'Network Programming Lab',
+      'lsp': 'Linux Shell Programming Lab',
+      'javalab': 'Java Lab',
+      'foundationcourse': 'Foundation Course'
     },
     credits: {
-      'subject1': 4.0,
-      'subject2': 3.0,
-      'subject3': 3.0,
-      'subject4': 3.0,
-      'subject5': 3.0,
-      'subject6': 1.5,
-      'subject7': 1.5,
-      'subject8': 1.5
+      'dms': 3.0,
+      'mefa': 2.0,
+      'mpi': 3.0,
+      'dbms': 3.0,
+      'toc': 3.0,
+      'dccn': 3.0,
+      'mpilab': 1.0,
+      'dbmslab': 1.5,
+      'nplab': 1.5,
+      'lsp': 1.0,
+      'javalab': 1.0,
+      'foundationcourse': 0.5
+    }
+  },
+  '5th Semester': {
+    subjects: {
+      'itc': 'Information Theory & Coding',
+      'cd': 'Compiler Design',
+      'os': 'Operating System',
+      'cgmm': 'Computer Graphics & Multimedia',
+      'aa': 'Analysis of Algorithms',
+      'pe1': 'Wireless Communication / Human-Computer Interaction / Bioinformatics',
+      'cgmmlab': 'Computer Graphics & Multimedia Lab',
+      'cdlab': 'Compiler Design Lab',
+      'aalab': 'Analysis of Algorithms Lab',
+      'ajlab': 'Advance Java Lab',
+      'industrialtraining': 'Industrial Training',
+      'socialactivities': 'Social Outreach, Discipline & Extra Curricular Activities'
+    },
+    credits: {
+      'itc': 2.0,
+      'cd': 3.0,
+      'os': 3.0,
+      'cgmm': 3.0,
+      'aa': 3.0,
+      'pe1': 2.0,
+      'cgmmlab': 1.0,
+      'cdlab': 1.0,
+      'aalab': 1.0,
+      'ajlab': 1.0,
+      'industrialtraining': 2.5,
+      'socialactivities': 0.5
+    }
+  },
+  '6th Semester': {
+    subjects: {
+      'dip': 'Digital Image Processing',
+      'ml': 'Machine Learning',
+      'iss': 'Information Security System',
+      'cao': 'Computer Architecture and Organization',
+      'ai': 'Artificial Intelligence',
+      'cc': 'Cloud Computing',
+      'pe2': 'Distributed System / Software Defined Network / Ecommerce and ERP',
+      'diplab': 'Digital Image Processing Lab',
+      'mllab': 'Machine Learning Lab',
+      'pythonlab': 'Python Lab',
+      'madlab': 'Mobile Application Development Lab',
+      'socialactivities': 'Social Outreach, Discipline & Extra Curricular Activities'
+    },
+    credits: {
+      'dip': 2.0,
+      'ml': 3.0,
+      'iss': 2.0,
+      'cao': 3.0,
+      'ai': 2.0,
+      'cc': 3.0,
+      'pe2': 2.0,
+      'diplab': 1.5,
+      'mllab': 1.5,
+      'pythonlab': 1.5,
+      'madlab': 1.5,
+      'socialactivities': 0.5
+    }
+  },
+  '7th Semester': {
+    subjects: {
+      'iot': 'Internet of Things',
+      'oe1': 'Open Elective I',
+      'iotlab': 'Internet of Things Lab',
+      'cslab': 'Cyber Security Lab',
+      'industrialtraining': 'Industrial Training',
+      'seminar': 'Seminar',
+      'socialactivities': 'Social Outreach, Discipline & Extra Curricular Activities'
+    },
+    credits: {
+      'iot': 3.0,
+      'oe1': 3.0,
+      'iotlab': 2.0,
+      'cslab': 2.0,
+      'industrialtraining': 2.5,
+      'seminar': 2.0,
+      'socialactivities': 0.5
+    }
+  },
+  '8th Semester': {
+    subjects: {
+      'bda': 'Big Data Analytics',
+      'oe2': 'Open Elective II',
+      'bdalab': 'Big Data Analytics Lab',
+      'stvlab': 'Software Testing and Validation Lab',
+      'project': 'Project Work',
+      'socialactivities': 'Social Outreach, Discipline & Extra Curricular Activities'
+    },
+    credits: {
+      'bda': 3.0,
+      'oe2': 3.0,
+      'bdalab': 1.0,
+      'stvlab': 1.0,
+      'project': 7.0,
+      'socialactivities': 0.5
     }
   }
-  // Add more semesters as needed
 };
+
 
 const SemesterForm = () => {
   const navigate = useNavigate();
@@ -250,42 +366,42 @@ const SemesterForm = () => {
             className="bg-blue-50 p-6 rounded-lg mb-8 border border-blue-200"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
           >
             <div className="max-w-md mx-auto">
-              <div className="mb-6">
-                <label htmlFor="branch" className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="mb-8">
+                <label className="block text-sm font-medium text-gray-700 mb-3">
                   Select Your Branch:
                 </label>
-                <select
+                <BranchSelector
                   id="branch"
-                  className="select-field"
+                  options={[
+                    { value: "Computer Science", label: "Computer Science" },
+                    { value: "Information Technology", label: "Information Technology" },
+                    { value: "Electronics", label: "Electronics" },
+                    { value: "Mechanical", label: "Mechanical" },
+                    { value: "Civil", label: "Civil" }
+                  ]}
                   value={selectedBranch}
                   onChange={(e) => setSelectedBranch(e.target.value)}
-                >
-                  <option value="Computer Science">Computer Science</option>
-                  <option value="Information Technology">Information Technology</option>
-                  <option value="Electronics">Electronics</option>
-                  <option value="Mechanical">Mechanical</option>
-                  <option value="Civil">Civil</option>
-                </select>
+                  required
+                />
               </div>
 
-              <div className="mb-6">
-                <label htmlFor="semester" className="block text-sm font-medium text-gray-700 mb-2">
+              <div className="mb-8">
+                <label className="block text-sm font-medium text-gray-700 mb-3">
                   Select Your Semester:
                 </label>
-                <select
+                <SemesterSelector
                   id="semester"
-                  className="select-field"
+                  options={[
+                    { value: "", label: "-- Select Semester --" },
+                    ...availableSemesters.map(sem => ({ value: sem, label: sem }))
+                  ]}
                   value={selectedSemester || ''}
                   onChange={handleSemesterSelect}
-                >
-                  <option value="">-- Select Semester --</option>
-                  {availableSemesters.map((sem, index) => (
-                    <option key={index} value={sem}>{sem}</option>
-                  ))}
-                </select>
+                  required
+                />
               </div>
 
               {selectedSemester && (
@@ -364,25 +480,21 @@ const SemesterForm = () => {
                   variants={itemVariants}
                   whileHover={{
                     y: -5,
-                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
+                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+                    transition: { duration: 0.5 }
                   }}
                 >
                   <label htmlFor={subject} className="block text-sm font-medium text-gray-700 mb-2">
                     {subjectData[semester].subjects[subject]}:
                   </label>
-                  <select
+                  <GradeSelector
                     id={subject}
                     name={subject}
                     value={formData[subject] || ''}
                     onChange={handleChange}
                     required
-                    className="select-field"
-                  >
-                    <option value="">Select Grade</option>
-                    {Object.keys(gradeMap).map((grade, idx) => (
-                      <option key={idx} value={grade}>{grade}</option>
-                    ))}
-                  </select>
+                    gradeMap={gradeMap}
+                  />
                   <div className="mt-1 text-xs text-gray-500 flex items-center">
                     <span className="inline-block w-2 h-2 bg-blue-500 rounded-full mr-1"></span>
                     Credits: {subjectData[semester].credits[subject]}
