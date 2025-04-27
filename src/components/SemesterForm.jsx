@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import AnimatedPage from './AnimatedPage';
 
 // Subject data for different branches and semesters
 const subjectData = {
@@ -159,124 +161,360 @@ const SemesterForm = () => {
     navigate('/');
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 100
+      }
+    }
+  };
+
+  const formCardVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        damping: 15,
+        stiffness: 100
+      }
+    }
+  };
+
+  const resultVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        type: "spring",
+        damping: 12,
+        stiffness: 100
+      }
+    }
+  };
+
+  // State for semester selection when accessed directly
+  const [selectedSemester, setSelectedSemester] = useState(semester);
+  const [selectedBranch, setSelectedBranch] = useState(branch || 'Computer Science');
+
+  // Available semesters for selection
+  const availableSemesters = Object.keys(subjectData);
+
+  // Handle semester selection
+  const handleSemesterSelect = (e) => {
+    setSelectedSemester(e.target.value);
+
+    // Initialize form data for the selected semester
+    if (e.target.value && subjectData[e.target.value]) {
+      const initialFormData = {};
+      Object.keys(subjectData[e.target.value].subjects).forEach(key => {
+        initialFormData[key] = '';
+      });
+      setFormData(initialFormData);
+    }
+  };
+
+  // If no semester is selected or accessed directly from navbar
   if (!semester || !subjectData[semester]) {
     return (
-      <div className="max-w-md mx-auto my-12 p-8 bg-white rounded-lg shadow-lg text-center">
-        <h2 className="text-2xl font-bold text-red-600 mb-4">Error: Invalid semester selected</h2>
-        <button
-          onClick={handleBack}
-          className="btn btn-primary"
-        >
-          Go Back
-        </button>
-      </div>
+      <AnimatedPage>
+        <div className="max-w-4xl mx-auto my-12 p-8 bg-white rounded-lg shadow-lg">
+          <motion.div
+            className="text-center mb-8"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Semester GPA Calculator</h1>
+            <p className="text-gray-600 mb-8">Please select a semester to calculate your GPA</p>
+          </motion.div>
+
+          <motion.div
+            className="bg-blue-50 p-6 rounded-lg mb-8 border border-blue-200"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+          >
+            <div className="max-w-md mx-auto">
+              <div className="mb-6">
+                <label htmlFor="branch" className="block text-sm font-medium text-gray-700 mb-2">
+                  Select Your Branch:
+                </label>
+                <select
+                  id="branch"
+                  className="select-field"
+                  value={selectedBranch}
+                  onChange={(e) => setSelectedBranch(e.target.value)}
+                >
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Information Technology">Information Technology</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Mechanical">Mechanical</option>
+                  <option value="Civil">Civil</option>
+                </select>
+              </div>
+
+              <div className="mb-6">
+                <label htmlFor="semester" className="block text-sm font-medium text-gray-700 mb-2">
+                  Select Your Semester:
+                </label>
+                <select
+                  id="semester"
+                  className="select-field"
+                  value={selectedSemester || ''}
+                  onChange={handleSemesterSelect}
+                >
+                  <option value="">-- Select Semester --</option>
+                  {availableSemesters.map((sem, index) => (
+                    <option key={index} value={sem}>{sem}</option>
+                  ))}
+                </select>
+              </div>
+
+              {selectedSemester && (
+                <motion.div
+                  className="text-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.3, duration: 0.5 }}
+                >
+                  <motion.button
+                    type="button"
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition-colors duration-300"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => {
+                      navigate(`/semester-form?branch=${encodeURIComponent(selectedBranch)}&semester=${encodeURIComponent(selectedSemester)}`);
+                    }}
+                  >
+                    Continue to GPA Calculator
+                  </motion.button>
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
+
+          <motion.div
+            className="text-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4, duration: 0.5 }}
+          >
+            <motion.button
+              onClick={handleBack}
+              className="text-blue-600 hover:text-blue-800 font-medium"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Back to Home
+            </motion.button>
+          </motion.div>
+        </div>
+      </AnimatedPage>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">CGPA Calculator</h1>
-        <h2 className="text-xl font-semibold text-primary-600">{branch} - {semester}</h2>
-      </div>
+    <AnimatedPage>
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <motion.div
+          className="text-center mb-8"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">CGPA Calculator</h1>
+          <h2 className="text-xl font-semibold text-blue-600">{branch} - {semester}</h2>
+        </motion.div>
 
-      <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {Object.keys(subjectData[semester].subjects).map((subject, index) => (
-              <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
-                <label htmlFor={subject} className="block text-sm font-medium text-gray-700 mb-2">
-                  {subjectData[semester].subjects[subject]}:
-                </label>
-                <select
-                  id={subject}
-                  name={subject}
-                  value={formData[subject] || ''}
-                  onChange={handleChange}
-                  required
-                  className="select-field"
+        <motion.div
+          className="bg-white rounded-lg shadow-lg p-6 mb-8"
+          variants={formCardVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <form onSubmit={handleSubmit}>
+            <motion.div
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {Object.keys(subjectData[semester].subjects).map((subject, index) => (
+                <motion.div
+                  key={index}
+                  className="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all duration-300"
+                  variants={itemVariants}
+                  whileHover={{
+                    y: -5,
+                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)"
+                  }}
                 >
-                  <option value="">Select Grade</option>
-                  {Object.keys(gradeMap).map((grade, idx) => (
-                    <option key={idx} value={grade}>{grade}</option>
-                  ))}
-                </select>
-                <div className="mt-1 text-xs text-gray-500">
-                  Credits: {subjectData[semester].credits[subject]}
-                </div>
-              </div>
-            ))}
-          </div>
+                  <label htmlFor={subject} className="block text-sm font-medium text-gray-700 mb-2">
+                    {subjectData[semester].subjects[subject]}:
+                  </label>
+                  <select
+                    id={subject}
+                    name={subject}
+                    value={formData[subject] || ''}
+                    onChange={handleChange}
+                    required
+                    className="select-field"
+                  >
+                    <option value="">Select Grade</option>
+                    {Object.keys(gradeMap).map((grade, idx) => (
+                      <option key={idx} value={grade}>{grade}</option>
+                    ))}
+                  </select>
+                  <div className="mt-1 text-xs text-gray-500 flex items-center">
+                    <span className="inline-block w-2 h-2 bg-blue-500 rounded-full mr-1"></span>
+                    Credits: {subjectData[semester].credits[subject]}
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
 
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button
-              type="button"
-              onClick={handleBack}
-              className="btn btn-secondary"
+            <motion.div
+              className="flex flex-col sm:flex-row justify-center gap-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
             >
-              Back
-            </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
+              <motion.button
+                type="button"
+                onClick={handleBack}
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-md font-medium transition-colors duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Back
+              </motion.button>
+              <motion.button
+                type="submit"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Calculate SGPA
+              </motion.button>
+            </motion.div>
+          </form>
+        </motion.div>
+
+        {sgpa !== null && (
+          <motion.div
+            className="bg-white rounded-lg shadow-lg p-8 text-center"
+            variants={resultVariants}
+            initial="hidden"
+            animate="visible"
+          >
+            <motion.div
+              className="mb-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
             >
-              Calculate SGPA
-            </button>
-          </div>
-        </form>
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">Your SGPA: {sgpa}</h2>
+
+              <motion.div
+                className="w-full h-4 bg-gray-200 rounded-full mb-4 overflow-hidden"
+                initial={{ width: 0 }}
+                animate={{ width: "100%" }}
+                transition={{ delay: 0.3, duration: 1 }}
+              >
+                <motion.div
+                  className={`h-full rounded-full ${
+                    sgpa >= 9.0 ? 'bg-green-600' :
+                    sgpa >= 8.0 ? 'bg-green-500' :
+                    sgpa >= 7.0 ? 'bg-blue-500' :
+                    sgpa >= 6.0 ? 'bg-yellow-500' :
+                    sgpa >= 5.0 ? 'bg-orange-500' : 'bg-red-500'
+                  }`}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(sgpa/10)*100}%` }}
+                  transition={{ delay: 0.5, duration: 1, ease: "easeOut" }}
+                ></motion.div>
+              </motion.div>
+
+              <motion.div
+                className="inline-block px-6 py-3 rounded-full bg-gray-100"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: 0.7, duration: 0.5 }}
+              >
+                <p className="font-medium">
+                  Grade Performance: {' '}
+                  <span className={`font-bold ${
+                    sgpa >= 9.0 ? 'text-green-600' :
+                    sgpa >= 8.0 ? 'text-green-500' :
+                    sgpa >= 7.0 ? 'text-blue-500' :
+                    sgpa >= 6.0 ? 'text-yellow-500' :
+                    sgpa >= 5.0 ? 'text-orange-500' : 'text-red-500'
+                  }`}>
+                    {sgpa >= 9.0 ? 'Outstanding' :
+                     sgpa >= 8.0 ? 'Excellent' :
+                     sgpa >= 7.0 ? 'Very Good' :
+                     sgpa >= 6.0 ? 'Good' :
+                     sgpa >= 5.0 ? 'Average' : 'Poor'}
+                  </span>
+                </p>
+              </motion.div>
+            </motion.div>
+
+            <motion.div
+              className="flex flex-col sm:flex-row justify-center gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.9, duration: 0.5 }}
+            >
+              <motion.button
+                type="button"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md font-medium transition-colors duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => navigate('/aggregate-cgpa')}
+              >
+                Calculate Overall CGPA
+              </motion.button>
+              <motion.button
+                type="button"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-md font-medium transition-colors duration-300"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  setSgpa(null);
+                  // Reset form data
+                  const initialFormData = {};
+                  Object.keys(subjectData[semester].subjects).forEach(key => {
+                    initialFormData[key] = '';
+                  });
+                  setFormData(initialFormData);
+                }}
+              >
+                Reset Form
+              </motion.button>
+            </motion.div>
+          </motion.div>
+        )}
       </div>
-
-      {sgpa !== null && (
-        <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-          <div className="mb-6">
-            <h2 className="text-3xl font-bold text-gray-900 mb-2">Your SGPA: {sgpa}</h2>
-            <div className="inline-block px-4 py-2 rounded-full bg-gray-100">
-              <p className="font-medium">
-                Grade Performance: {' '}
-                <span className={`font-bold ${
-                  sgpa >= 9.0 ? 'text-green-600' :
-                  sgpa >= 8.0 ? 'text-green-500' :
-                  sgpa >= 7.0 ? 'text-blue-500' :
-                  sgpa >= 6.0 ? 'text-yellow-500' :
-                  sgpa >= 5.0 ? 'text-orange-500' : 'text-red-500'
-                }`}>
-                  {sgpa >= 9.0 ? 'Outstanding' :
-                   sgpa >= 8.0 ? 'Excellent' :
-                   sgpa >= 7.0 ? 'Very Good' :
-                   sgpa >= 6.0 ? 'Good' :
-                   sgpa >= 5.0 ? 'Average' : 'Poor'}
-                </span>
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={() => navigate('/aggregate-cgpa')}
-            >
-              Calculate Overall CGPA
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() => {
-                setSgpa(null);
-                // Reset form data
-                const initialFormData = {};
-                Object.keys(subjectData[semester].subjects).forEach(key => {
-                  initialFormData[key] = '';
-                });
-                setFormData(initialFormData);
-              }}
-            >
-              Reset Form
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+    </AnimatedPage>
   );
 };
 
