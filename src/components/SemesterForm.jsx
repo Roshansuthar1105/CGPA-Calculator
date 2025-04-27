@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import '../styles/SemesterForm.css';
 
 // Subject data for different branches and semesters
 const subjectData = {
@@ -162,68 +161,106 @@ const SemesterForm = () => {
 
   if (!semester || !subjectData[semester]) {
     return (
-      <div className="error-container">
-        <h2>Error: Invalid semester selected</h2>
-        <button onClick={handleBack}>Go Back</button>
+      <div className="max-w-md mx-auto my-12 p-8 bg-white rounded-lg shadow-lg text-center">
+        <h2 className="text-2xl font-bold text-red-600 mb-4">Error: Invalid semester selected</h2>
+        <button
+          onClick={handleBack}
+          className="btn btn-primary"
+        >
+          Go Back
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="semester-form-container">
-      <h1>CGPA Calculator</h1>
-      <h2>{branch} - {semester}</h2>
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">CGPA Calculator</h1>
+        <h2 className="text-xl font-semibold text-primary-600">{branch} - {semester}</h2>
+      </div>
 
-      <form onSubmit={handleSubmit}>
-        <div className="subjects-container">
-          {Object.keys(subjectData[semester].subjects).map((subject, index) => (
-            <div key={index} className="subject-item">
-              <label htmlFor={subject}>{subjectData[semester].subjects[subject]}:</label>
-              <select
-                id={subject}
-                name={subject}
-                value={formData[subject] || ''}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Grade</option>
-                {Object.keys(gradeMap).map((grade, idx) => (
-                  <option key={idx} value={grade}>{grade}</option>
-                ))}
-              </select>
-            </div>
-          ))}
-        </div>
-
-        <div className="button-group">
-          <button type="button" onClick={handleBack} className="back-btn">Back</button>
-          <button type="submit" className="calculate-btn">Calculate SGPA</button>
-        </div>
-      </form>
-
-      {sgpa !== null && (
-        <div className="result-container">
-          <h2>Your SGPA: {sgpa}</h2>
-          <div className="grade-info">
-            <p>Grade Performance:
-              {sgpa >= 9.0 ? 'Outstanding' :
-               sgpa >= 8.0 ? 'Excellent' :
-               sgpa >= 7.0 ? 'Very Good' :
-               sgpa >= 6.0 ? 'Good' :
-               sgpa >= 5.0 ? 'Average' : 'Poor'}
-            </p>
+      <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <form onSubmit={handleSubmit}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            {Object.keys(subjectData[semester].subjects).map((subject, index) => (
+              <div key={index} className="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200">
+                <label htmlFor={subject} className="block text-sm font-medium text-gray-700 mb-2">
+                  {subjectData[semester].subjects[subject]}:
+                </label>
+                <select
+                  id={subject}
+                  name={subject}
+                  value={formData[subject] || ''}
+                  onChange={handleChange}
+                  required
+                  className="select-field"
+                >
+                  <option value="">Select Grade</option>
+                  {Object.keys(gradeMap).map((grade, idx) => (
+                    <option key={idx} value={grade}>{grade}</option>
+                  ))}
+                </select>
+                <div className="mt-1 text-xs text-gray-500">
+                  Credits: {subjectData[semester].credits[subject]}
+                </div>
+              </div>
+            ))}
           </div>
-          <div className="action-buttons">
+
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
             <button
               type="button"
-              className="action-btn"
+              onClick={handleBack}
+              className="btn btn-secondary"
+            >
+              Back
+            </button>
+            <button
+              type="submit"
+              className="btn btn-primary"
+            >
+              Calculate SGPA
+            </button>
+          </div>
+        </form>
+      </div>
+
+      {sgpa !== null && (
+        <div className="bg-white rounded-lg shadow-lg p-8 text-center">
+          <div className="mb-6">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">Your SGPA: {sgpa}</h2>
+            <div className="inline-block px-4 py-2 rounded-full bg-gray-100">
+              <p className="font-medium">
+                Grade Performance: {' '}
+                <span className={`font-bold ${
+                  sgpa >= 9.0 ? 'text-green-600' :
+                  sgpa >= 8.0 ? 'text-green-500' :
+                  sgpa >= 7.0 ? 'text-blue-500' :
+                  sgpa >= 6.0 ? 'text-yellow-500' :
+                  sgpa >= 5.0 ? 'text-orange-500' : 'text-red-500'
+                }`}>
+                  {sgpa >= 9.0 ? 'Outstanding' :
+                   sgpa >= 8.0 ? 'Excellent' :
+                   sgpa >= 7.0 ? 'Very Good' :
+                   sgpa >= 6.0 ? 'Good' :
+                   sgpa >= 5.0 ? 'Average' : 'Poor'}
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <button
+              type="button"
+              className="btn btn-primary"
               onClick={() => navigate('/aggregate-cgpa')}
             >
               Calculate Overall CGPA
             </button>
             <button
               type="button"
-              className="action-btn reset-btn"
+              className="btn btn-secondary"
               onClick={() => {
                 setSgpa(null);
                 // Reset form data
