@@ -122,38 +122,6 @@ const Home = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          {/* Background animated elements */}
-          <motion.div
-            className="absolute top-0 left-0 w-full h-full"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.1 }}
-            transition={{ delay: 0.5, duration: 1 }}
-          >
-            {[...Array(10)].map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute rounded-full bg-white"
-                style={{
-                  width: Math.random() * 50 + 10,
-                  height: Math.random() * 50 + 10,
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                }}
-                animate={{
-                  y: [0, Math.random() * -100 - 50],
-                  opacity: [0.7, 0],
-                }}
-                transition={{
-                  duration: Math.random() * 5 + 5,
-                  repeat: Infinity,
-                  repeatType: "loop",
-                  ease: "easeInOut",
-                  delay: Math.random() * 5,
-                }}
-              />
-            ))}
-          </motion.div>
-
           <motion.h1
             className="text-4xl font-bold text-white mb-4 md:text-5xl relative z-10"
             animate={floatingAnimation}

@@ -20,13 +20,13 @@ const Navbar = () => {
 
           {/* Desktop menu */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/" className="text-white hover:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent hover:border-yellow-300 transition-all duration-200">
+            <Link to="/" className="text-white hover:text-purple-300 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent hover:border-purple-300 transition-all duration-200">
               Home
             </Link>
-            <Link to="/semester-form" className="text-white hover:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent hover:border-yellow-300 transition-all duration-200">
+            <Link to="/semester-form" className="text-white hover:text-purple-300 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent hover:border-purple-300 transition-all duration-200">
               Semester GPA
             </Link>
-            <Link to="/aggregate-cgpa" className="text-white hover:text-yellow-300 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent hover:border-yellow-300 transition-all duration-200">
+            <Link to="/aggregate-cgpa" className="text-white hover:text-purple-300 px-3 py-2 rounded-md text-sm font-medium border-b-2 border-transparent hover:border-purple-300 transition-all duration-200">
               Aggregate CGPA
             </Link>
           </div>
@@ -35,7 +35,7 @@ const Navbar = () => {
           <div className="md:hidden flex items-center">
             <button
               onClick={toggleMenu}
-              className="text-white hover:text-yellow-300 focus:outline-none"
+              className="text-white hover:text-purple-300 focus:outline-none"
             >
               <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 {isMenuOpen ? (
@@ -55,21 +55,21 @@ const Navbar = () => {
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
               to="/"
-              className="text-white hover:bg-gray-700 hover:text-yellow-300 block px-3 py-2 rounded-md text-base font-medium"
+              className="text-white hover:bg-gray-700 hover:text-purple-300 block px-3 py-2 rounded-md text-base font-medium"
               onClick={() => setIsMenuOpen(false)}
             >
               Home
             </Link>
             <Link
               to="/semester-form"
-              className="text-white hover:bg-gray-700 hover:text-yellow-300 block px-3 py-2 rounded-md text-base font-medium"
+              className="text-white hover:bg-gray-700 hover:text-purple-300 block px-3 py-2 rounded-md text-base font-medium"
               onClick={() => setIsMenuOpen(false)}
             >
               Semester GPA
             </Link>
             <Link
               to="/aggregate-cgpa"
-              className="text-white hover:bg-gray-700 hover:text-yellow-300 block px-3 py-2 rounded-md text-base font-medium"
+              className="text-white hover:bg-gray-700 hover:text-purple-300 block px-3 py-2 rounded-md text-base font-medium"
               onClick={() => setIsMenuOpen(false)}
             >
               Aggregate CGPA
