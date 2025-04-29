@@ -57,7 +57,7 @@ const Footer = () => {
           viewport={{ once: true, amount: 0.1 }}
         >
           <motion.div variants={itemVariants}>
-            <h3 className="text-xl font-bold text-blue-400 !text-blue-400 mb-4">CGPA Calculator</h3>
+            <h3 className="text-xl font-bold !text-blue-400 mb-4">CGPA Calculator</h3>
             <p className="text-gray-300 mb-4">A simple tool to calculate your semester GPA and overall CGPA for engineering students.</p>
             <div className="flex space-x-4">
               {[
