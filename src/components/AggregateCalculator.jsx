@@ -4,15 +4,14 @@ import AnimatedPage from './AnimatedPage';
 
 const AggregateCalculator = () => {
   const [semesters, setSemesters] = useState([
-    { id: 1, sgpa: '', credits: '' }
+    { id: 1, sgpa: '' }
   ]);
   const [cgpa, setCgpa] = useState(null);
 
   const handleAddSemester = () => {
     const newSemester = {
       id: semesters.length + 1,
-      sgpa: '',
-      credits: ''
+      sgpa: ''
     };
     setSemesters([...semesters, newSemester]);
   };
@@ -38,29 +37,28 @@ const AggregateCalculator = () => {
 
     // Check if all fields are filled
     const allFieldsFilled = semesters.every(semester =>
-      semester.sgpa !== '' && semester.credits !== ''
+      semester.sgpa !== ''
     );
 
     if (!allFieldsFilled) {
-      alert('Please fill in all SGPA and credit values');
+      alert('Please fill in all SGPA values');
       return;
     }
 
-    let totalGradePoints = 0;
-    let totalCredits = 0;
+    let totalSGPA = 0;
+    let validSemesters = 0;
 
     semesters.forEach(semester => {
       const semesterSGPA = parseFloat(semester.sgpa);
-      const semesterCredits = parseFloat(semester.credits);
 
-      if (!isNaN(semesterSGPA) && !isNaN(semesterCredits)) {
-        totalGradePoints += semesterSGPA * semesterCredits;
-        totalCredits += semesterCredits;
+      if (!isNaN(semesterSGPA)) {
+        totalSGPA += semesterSGPA;
+        validSemesters++;
       }
     });
 
-    if (totalCredits > 0) {
-      const calculatedCGPA = (totalGradePoints / totalCredits).toFixed(2);
+    if (validSemesters > 0) {
+      const calculatedCGPA = (totalSGPA / validSemesters).toFixed(2);
       setCgpa(calculatedCGPA);
     } else {
       setCgpa(0);
@@ -122,8 +120,8 @@ const AggregateCalculator = () => {
             transition={{ delay: 0.3, duration: 0.5 }}
           >
             <p className="text-sm text-blue-800">
-              <span className="font-semibold">Tip:</span> Enter the SGPA and total credits for each semester you've completed.
-              You can add multiple semesters to calculate your overall CGPA.
+              <span className="font-semibold">Tip:</span> Enter the SGPA for each semester you've completed.
+              You can add multiple semesters to calculate your overall CGPA as a simple average.
             </p>
           </motion.div>
         </motion.div>
@@ -169,7 +167,7 @@ const AggregateCalculator = () => {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="w-full">
                     <div className="space-y-2">
                       <label htmlFor={`sgpa-${semester.id}`} className="block text-sm font-medium text-gray-700">
                         SGPA:
@@ -184,23 +182,7 @@ const AggregateCalculator = () => {
                         step="0.01"
                         placeholder="Enter SGPA"
                         required
-                        className="input-field"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label htmlFor={`credits-${semester.id}`} className="block text-sm font-medium text-gray-700">
-                        Credits:
-                      </label>
-                      <input
-                        type="number"
-                        id={`credits-${semester.id}`}
-                        value={semester.credits}
-                        onChange={(e) => handleChange(semester.id, 'credits', e.target.value)}
-                        min="1"
-                        step="0.5"
-                        placeholder="Enter Credits"
-                        required
-                        className="input-field"
+                        className="input-field w-full"
                       />
                     </div>
                   </div>
@@ -252,23 +234,27 @@ const AggregateCalculator = () => {
               >
                 <h2 className="text-3xl font-bold text-gray-900 mb-4">Your Aggregate CGPA: {cgpa}</h2>
                 <motion.div
-                  className={`inline-block px-6 py-3 rounded-full font-medium ${
-                    cgpa >= 8.5 ? 'bg-green-100 text-green-800' :
-                    cgpa >= 7 ? 'bg-blue-100 text-blue-800' :
-                    cgpa >= 5 ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-red-100 text-red-800'
+                className="w-full h-4 bg-gray-200 rounded-full mb-4 overflow-hidden"
+                initial={{ width: 0 }}
+                animate={{ width: "100%" }}
+                transition={{ delay: 0.3, duration: 1 }}
+              >
+                <motion.div
+                  className={`h-full rounded-full ${
+                    cgpa >= 9.0 ? 'bg-green-600' :
+                    cgpa >= 8.0 ? 'bg-green-500' :
+                    cgpa >= 7.0 ? 'bg-blue-500' :
+                    cgpa >= 6.0 ? 'bg-yellow-500' :
+                    cgpa >= 5.0 ? 'bg-orange-500' : 'bg-red-500'
                   }`}
-                  initial={{ scale: 0.8, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.4, duration: 0.5 }}
-                >
-                  {cgpa >= 8.5 ? 'Excellent' :
-                   cgpa >= 7 ? 'Good' :
-                   cgpa >= 5 ? 'Average' : 'Poor'}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${(cgpa/10)*100}%` }}
+                  transition={{ delay: 0.5, duration: 1, ease: "easeOut" }}
+                ></motion.div>
                 </motion.div>
               </motion.div>
 
-              <motion.div
+              {/* <motion.div
                 className="bg-gray-50 rounded-lg p-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -333,7 +319,7 @@ const AggregateCalculator = () => {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </motion.div> */}
 
               <motion.div
                 className="mt-8 text-center"
@@ -342,7 +328,7 @@ const AggregateCalculator = () => {
                 transition={{ delay: 1.2, duration: 0.5 }}
               >
                 <p className="text-gray-600">
-                  This calculation is based on the weighted average of your semester GPAs.
+                  This calculation is based on the simple average of your semester GPAs.
                 </p>
                 <motion.div
                   className="mt-4"
@@ -352,6 +338,7 @@ const AggregateCalculator = () => {
                     type="button"
                     onClick={() => {
                       setCgpa(null);
+                      setSemesters([{ id: 1, sgpa: '' }]);
                       // Reset form data if needed
                     }}
                     className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-2 rounded-md font-medium transition-colors duration-300"
